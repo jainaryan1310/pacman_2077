@@ -2,7 +2,6 @@
 #include "constants.h"
 #include "maze_render.h"
 
-#define STEP 5
 
 void player_key_down(int key, struct Player* player) {
     if (key == SDLK_LEFT) {
@@ -55,12 +54,13 @@ void set_player_pos(struct Player* player, float x, float y) {
     player->position.y = y;
 }
 
-struct Bullet init_bullet(int x, int y, int face) {
+struct Bullet init_bullet(int x, int y, int face, int shoot) {
     struct Bullet b;
     b.position.x = x;
     b.position.y = y;
     b.position.w = BULLET_WIDTH;
     b.position.h = BULLET_HEIGHT;
     b.face = face;
+    b.shoot = shoot;
     return b;
 }
