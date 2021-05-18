@@ -16,7 +16,7 @@ void player_key_down(int key, struct Player* player) {
     if (key == SDLK_DOWN) {
         player->down = 1;
     }
-    if (key == player->attack_key) {
+    if (key == SDLK_z) {
         player->shoot = player->face;
     }
 }
@@ -34,7 +34,7 @@ void player_key_up(int key, struct Player* player) {
     if (key == SDLK_DOWN) {
         player->down = 0;
     }
-    if (key == player->attack_key) {
+    if (key == SDLK_z) {
         player->shoot = false;
     }
 }
@@ -54,13 +54,12 @@ void set_player_pos(struct Player* player, float x, float y) {
     player->position.y = y;
 }
 
-struct Bullet init_bullet(int x, int y, int face, int shoot) {
+struct Bullet init_bullet(int x, int y, int face) {
     struct Bullet b;
     b.position.x = x;
     b.position.y = y;
     b.position.w = BULLET_WIDTH;
     b.position.h = BULLET_HEIGHT;
     b.face = face;
-    b.shoot = shoot;
     return b;
 }

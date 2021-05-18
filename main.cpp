@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <pthread.h>
@@ -30,9 +31,20 @@ SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
 
 void init_players() {
     int i;
-    for (i = 0; i < MAX_PLAYERS; i++) {
-        players[i].position.x = get_spawn_x();
-        players[i].position.y = get_spawn_y();
+    if(MAX_PLAYERS >= 1){
+        players[0].position.x = get_spawn_x(1);
+        players[0].position.y = get_spawn_y(1);
+        players[0].position.w = PLAYER_WIDTH;
+        players[0].position.h = PLAYER_HEIGHT;
+        players[0].face = 1;
+        players[0].shoot = false;
+        players[0].reloading = false;
+        players[0].kills = 0;
+        players[0].deaths = 0;
+    }
+    for (i = 1; i < MAX_PLAYERS; i++) {
+        players[i].position.x = get_spawn_x(0);
+        players[i].position.y = get_spawn_y(0);
         players[i].position.w = PLAYER_WIDTH;
         players[i].position.h = PLAYER_HEIGHT;
         players[i].face = 1;
@@ -103,7 +115,7 @@ int main(){
     font = TTF_OpenFont("m5x7.ttf", 24);
     init_players();
     window = SDL_CreateWindow(
-            "game",
+            "pacman_2077",
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
             640,
@@ -124,15 +136,17 @@ int main(){
         SDL_Quit();
         return 1;
     }
+
     map = get_map_texture(renderer);
     pacman = load_texture(renderer, "pacman.bmp");
     demon = load_texture(renderer, "demon.bmp");
     //tex = load_texture(renderer, "player.bmp");
     bullet = load_texture(renderer, "bullet.bmp");
     int i;
+
     server_or_client(renderer, &menu, font);
     if (menu == 'c') {
-        server_ip_addr = malloc(16 * sizeof(char));
+        server_ip_addr = (char*) malloc(16 * sizeof(char));
         ask_for_ip(renderer, font, server_ip_addr);
     }
     pthread_t thread_id_server, thread_id_client, thread_id_server_send;
@@ -154,7 +168,6 @@ int main(){
     SDL_Rect bullet_pos;
     bullet_pos.w = BULLET_HEIGHT;
     bullet_pos.h = BULLET_HEIGHT;
-
 
     SDL_Event e;
 
@@ -201,7 +214,8 @@ int main(){
     pthread_cancel(thread_id_client);
     pthread_cancel(thread_id_server);
     pthread_cancel(thread_id_server_send);
-    SDL_DestroyTexture(tex);
+    SDL_DestroyTexture(pacman);
+    SDL_DestroyTexture(demon);
     SDL_DestroyTexture(bullet);
     SDL_DestroyTexture(map);
     SDL_DestroyRenderer(renderer);

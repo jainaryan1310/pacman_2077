@@ -122,7 +122,7 @@ int move_and_check_collisions(SDL_Rect *position, int axis, int mov) {
     }
 
     if (axis == Y_AXIS) {
-        temp.y += sign(mov);
+        temp.y += -sign(mov);
     }
 
     if (check_collisions(&temp)) {
@@ -208,7 +208,18 @@ void move_player(struct Player *player) {
     }
 }
 
+void print_maze_values(){
+    for (int i = 0; i<109; i++){
+        for(int j = 0; j<145; j++){
+            std::cout << maze[i][j] << " ";
+        }
+        std::cout << endl;
+    }
+}
+
 SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
+    generate_maze();
+    //print_maze_values();
     SDL_Surface *bitmap = NULL;
     SDL_Texture *map_texture;
     SDL_Rect rect;
@@ -231,4 +242,46 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
     }
     SDL_SetRenderTarget(renderer, NULL);
     return map_texture;
+}
+
+int get_spawn_x(int pac_or_demon){
+    if(pac_or_demon == 1){
+        for (int i = 0; i<109; i++){
+            for(int j = 0; j<145; j++){
+                if (maze[i][j] == 0){
+                    return j+1;
+                }
+            }
+        }
+    }else{
+        for (int i = 108; i>=0; i--){
+            for(int j = 144; j>=0; j--){
+                if (maze[i][j] == 0){
+                    return j+1;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+int get_spawn_y(int pac_or_demon){
+    if(pac_or_demon == 1){
+        for (int i = 0; i<109; i++){
+            for(int j = 0; j<145; j++){
+                if (maze[i][j] == 0){
+                    return i+1;
+                }
+            }
+        }
+    }else{
+        for (int i = 108; i>=0; i--){
+            for(int j = 144; j>=0; j--){
+                if (maze[i][j] == 0){
+                    return i+1;
+                }
+            }
+        }
+    }
+    return -1;
 }
