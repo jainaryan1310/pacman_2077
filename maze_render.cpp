@@ -7,6 +7,7 @@ using namespace std;
 
 int height = 45;
 int width = 61;
+int coins = 0;
 
 int maze[45][61];
 
@@ -79,8 +80,12 @@ void generate_maze() {
 	dfs(x, y);
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
+            if (maze[i][j] == 0) {
+                coins += 1;
+            }
 			if (maze[i][j] == 2) {
 				maze[i][j] = 0;
+                coins += 1;
 			}
 		}
 	}
@@ -88,14 +93,14 @@ void generate_maze() {
 }
 
 int get_coins() {
-    int coins = 0;
+    /*int coins = 0;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < height; j++) {
             if (maze[i][j] == 0) {
                 coins += 1;
             }
         }
-    }
+    }*/
     return coins;
 }
 
@@ -143,7 +148,10 @@ int move_and_check_collisions(SDL_Rect *position, int axis, int mov, bool pacman
         *position = temp;
         //cout << "pacman " << pacman << endl;
         if (pacman) {
-            maze[2*position->y/TILE_SIZE][2*position->x/TILE_SIZE] = 2;
+            if (maze[2*position->y/TILE_SIZE][2*position->x/TILE_SIZE] != 2) {
+                maze[2*position->y/TILE_SIZE][2*position->x/TILE_SIZE] = 2;
+                coins -= 1;
+            }  
         }
         return 1;
     }
