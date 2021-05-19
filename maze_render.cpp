@@ -87,6 +87,18 @@ void generate_maze() {
 	return;
 }
 
+int get_coins() {
+    int coins = 0;
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < height; j++) {
+            if (maze[i][j] == 0) {
+                coins += 1;
+            }
+        }
+    }
+    return coins;
+}
+
 int sign(int a) {
     if (a < 0) {
         return -1;
@@ -102,10 +114,10 @@ void decrement_abs(int *a) {
 }
 
 int check_collisions(SDL_Rect *rect) {
-    if (maze[2*rect->y/TILE_SIZE][2*rect->x/TILE_SIZE] ||
-            maze[2*(rect->y + rect->h)/TILE_SIZE][2*rect->x/TILE_SIZE] ||
-            maze[2*(rect->y)/TILE_SIZE][2*(rect->x + rect->w)/TILE_SIZE] ||
-            maze[2*(rect->y + rect->h)/TILE_SIZE][2*(rect->x + rect->w)/TILE_SIZE] ||
+    if (maze[2*rect->y/TILE_SIZE][2*rect->x/TILE_SIZE] == 1 ||
+            maze[2*(rect->y + rect->h)/TILE_SIZE][2*rect->x/TILE_SIZE] == 1 ||
+            maze[2*(rect->y)/TILE_SIZE][2*(rect->x + rect->w)/TILE_SIZE] == 1 ||
+            maze[2*(rect->y + rect->h)/TILE_SIZE][2*(rect->x + rect->w)/TILE_SIZE] == 1 ||
             rect->x <= 0 || (2*(rect->x + rect->w) >= SCREEN_WIDTH)) {
         return true;
     } else {
@@ -114,7 +126,7 @@ int check_collisions(SDL_Rect *rect) {
 }
 
 
-int move_and_check_collisions(SDL_Rect *position, int axis, int mov) {
+int move_and_check_collisions(SDL_Rect *position, int axis, int mov, bool pacman) {
     SDL_Rect temp = *position;
 
     if (axis == X_AXIS) {
@@ -129,6 +141,10 @@ int move_and_check_collisions(SDL_Rect *position, int axis, int mov) {
         return 0;
     } else {
         *position = temp;
+        //cout << "pacman " << pacman << endl;
+        if (pacman) {
+            maze[2*position->y/TILE_SIZE][2*position->x/TILE_SIZE] = 2;
+        }
         return 1;
     }
 }
@@ -194,13 +210,13 @@ void move_player(struct Player *player) {
     
 
     while (x_movement != 0 || y_movement != 0) {
-        if (x_movement != 0 && move_and_check_collisions(&player->position, X_AXIS, x_movement)) {
+        if (x_movement != 0 && move_and_check_collisions(&player->position, X_AXIS, x_movement, &player->pacman)) {
             decrement_abs(&x_movement);
         } else {
             x_movement = 0;
         }
 
-        if (y_movement != 0 && move_and_check_collisions(&player->position, Y_AXIS, y_movement)) {
+        if (y_movement != 0 && move_and_check_collisions(&player->position, Y_AXIS, y_movement, &player->pacman)) {
             decrement_abs(&y_movement);
         } else {
             y_movement = 0;
@@ -218,12 +234,8 @@ void print_maze_values(){
 }
 
 SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
-    //print_maze_values();
-    //SDL_Surface *bmp = NULL;
-    //SDL_Texture *texture = NULL;
-    //bmp = SDL_LoadBMP("coin.bmp");
-    //texture = SDL_CreateTextureFromSurface(renderer, bmp);
-    //SDL_FreeSurface(bmp);
+    SDL_Surface *bmp = NULL;
+    bmp = SDL_LoadBMP("coin.bmp");
     SDL_Surface *bitmap = NULL;
     SDL_Texture *map_texture;
     SDL_Rect rect;
@@ -232,22 +244,22 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
     bitmap = SDL_LoadBMP("tile.bmp");
     SDL_Texture *tex = NULL;
     tex = SDL_CreateTextureFromSurface(renderer, bitmap);
-    //SDL_Texture *coin = NULL;
-    //coin = SDL_CreateTextureFromSurface(renderer, bmp);
+    SDL_Texture *coin = NULL;
+    coin = SDL_CreateTextureFromSurface(renderer, bmp);
     map_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_SetRenderTarget(renderer, map_texture);
     int i, j;
     for (i = 0; i < SCREEN_HEIGHT / TILE_SIZE; i++) {
         for (j = 0; j < SCREEN_WIDTH / TILE_SIZE; j++) {
-            if (maze[i][j]) {
+            if (maze[i][j] == 1) {
                 rect.x = TILE_SIZE * j;
                 rect.y = TILE_SIZE * i;
                 SDL_RenderCopy(renderer, tex, NULL, &rect);
-            }//else {
-                //rect.x = TILE_SIZE * j;
-                //rect.y = TILE_SIZE * i;
-                //SDL_RenderCopy(renderer, coin, NULL, &rect);
-            //}
+            }else if (maze[i][j] == 0) {
+                rect.x = TILE_SIZE * j;
+                rect.y = TILE_SIZE * i;
+                SDL_RenderCopy(renderer, coin, NULL, &rect);
+            }
         }
     }
     SDL_SetRenderTarget(renderer, NULL);

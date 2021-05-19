@@ -14,6 +14,8 @@
 #include "font.h"
 #include "menu.h"
 
+using namespace std;
+
 struct Player players[MAX_PLAYERS];
 int number_of_players = 0;
 int16_t my_id = -1;
@@ -41,6 +43,7 @@ void init_players() {
         players[0].reloading = false;
         players[0].kills = 0;
         players[0].deaths = 0;
+        players[0].pacman = true;
     }
     for (i = 1; i < MAX_PLAYERS; i++) {
         players[i].position.x = get_spawn_x(0);
@@ -52,6 +55,7 @@ void init_players() {
         players[i].reloading = false;
         players[i].kills = 0;
         players[i].deaths = 0;
+        players[i].pacman = false;
     }
 }
 
@@ -83,6 +87,7 @@ void* client_loop(void *arg) {
         if (id >= 0) {
             check_if_its_new_player(id);
             players[id].player_id = id;
+            //cout << "player_id assigned: " << id << endl;
             players[id].position.x = tab[1];
             players[id].position.y = tab[2];
             players[id].kills = tab[3];
@@ -137,7 +142,7 @@ int main(){
     }
     generate_maze();
     init_players();
-    map = get_map_texture(renderer);
+    
     pacman = load_texture(renderer, "pacman.bmp");
     demon = load_texture(renderer, "demon.bmp");
     //tex = load_texture(renderer, "player.bmp");
@@ -172,6 +177,13 @@ int main(){
     SDL_Event e;
 
     while (1) {
+        if (get_coins() <= 0) {
+            cout << "Pacman wins, demons lose" << endl;
+            break;
+        }
+        if (players[0].deaths >= 5) {
+            cout << "Pacman loses, demons win" << endl;
+        }
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {
                 break;
@@ -181,6 +193,7 @@ int main(){
         send_to_server(sock_client, server_addr, my_id, key_state_from_player(&players[my_id]));
         usleep(30);
         SDL_RenderClear(renderer);
+        map = get_map_texture(renderer);
         SDL_RenderCopy(renderer, map, NULL, NULL);
         SDL_RenderCopy(renderer, pacman, NULL, &players[0].position);
         for (i = 1; i <= number_of_players; i++) {
