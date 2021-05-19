@@ -113,13 +113,12 @@ int main(){
     TTF_Init();
     TTF_Font *font;
     font = TTF_OpenFont("m5x7.ttf", 24);
-    init_players();
     window = SDL_CreateWindow(
             "pacman_2077",
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
-            640,
-            480,
+            976,
+            720,
             0);
 
     if (window == NULL) {
@@ -136,7 +135,8 @@ int main(){
         SDL_Quit();
         return 1;
     }
-
+    generate_maze();
+    init_players();
     map = get_map_texture(renderer);
     pacman = load_texture(renderer, "pacman.bmp");
     demon = load_texture(renderer, "demon.bmp");

@@ -3,15 +3,15 @@
 
 #include "stdbool.h"
 
-#define SCREEN_WIDTH 4640
-#define SCREEN_HEIGHT 3488
+#define SCREEN_WIDTH 1952
+#define SCREEN_HEIGHT 1440
 #define FRAME_TIME 16666
 #define TILE_SIZE 32
 #define PLAYER_SPEED 4
-#define PLAYER_WIDTH 16
-#define PLAYER_HEIGHT 16
-#define BULLET_HEIGHT 8
-#define BULLET_WIDTH 8
+#define PLAYER_WIDTH 15
+#define PLAYER_HEIGHT 15
+#define BULLET_HEIGHT 2
+#define BULLET_WIDTH 2
 #define MAX_PLAYERS 10
 #define CLIENT_FRAME_TIME 15
 #define SERVER_FRAME_TIME 15

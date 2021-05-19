@@ -5,10 +5,10 @@
 
 using namespace std;
 
-int height = 109;
-int width = 145;
+int height = 45;
+int width = 61;
 
-int maze[109][145];
+int maze[45][61];
 
 void dfs(int x, int y) {
 	maze[x][y] = 2;
@@ -102,11 +102,11 @@ void decrement_abs(int *a) {
 }
 
 int check_collisions(SDL_Rect *rect) {
-    if (maze[rect->y/TILE_SIZE][rect->x/TILE_SIZE] ||
-            maze[(rect->y + rect->h)/TILE_SIZE][rect->x/TILE_SIZE] ||
-            maze[(rect->y)/TILE_SIZE][(rect->x + rect->w)/TILE_SIZE] ||
-            maze[(rect->y + rect->h)/TILE_SIZE][(rect->x + rect->w)/TILE_SIZE] ||
-            rect->x <= 0 || (rect->x + rect->w >= SCREEN_WIDTH)) {
+    if (maze[2*rect->y/TILE_SIZE][2*rect->x/TILE_SIZE] ||
+            maze[2*(rect->y + rect->h)/TILE_SIZE][2*rect->x/TILE_SIZE] ||
+            maze[2*(rect->y)/TILE_SIZE][2*(rect->x + rect->w)/TILE_SIZE] ||
+            maze[2*(rect->y + rect->h)/TILE_SIZE][2*(rect->x + rect->w)/TILE_SIZE] ||
+            rect->x <= 0 || (2*(rect->x + rect->w) >= SCREEN_WIDTH)) {
         return true;
     } else {
         return false;
@@ -218,16 +218,22 @@ void print_maze_values(){
 }
 
 SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
-    generate_maze();
     //print_maze_values();
+    //SDL_Surface *bmp = NULL;
+    //SDL_Texture *texture = NULL;
+    //bmp = SDL_LoadBMP("coin.bmp");
+    //texture = SDL_CreateTextureFromSurface(renderer, bmp);
+    //SDL_FreeSurface(bmp);
     SDL_Surface *bitmap = NULL;
     SDL_Texture *map_texture;
     SDL_Rect rect;
     rect.w = TILE_SIZE;
     rect.h = TILE_SIZE;
-    bitmap = SDL_LoadBMP("resources/tile.bmp");
+    bitmap = SDL_LoadBMP("tile.bmp");
     SDL_Texture *tex = NULL;
     tex = SDL_CreateTextureFromSurface(renderer, bitmap);
+    //SDL_Texture *coin = NULL;
+    //coin = SDL_CreateTextureFromSurface(renderer, bmp);
     map_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_SetRenderTarget(renderer, map_texture);
     int i, j;
@@ -237,49 +243,35 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
                 rect.x = TILE_SIZE * j;
                 rect.y = TILE_SIZE * i;
                 SDL_RenderCopy(renderer, tex, NULL, &rect);
-            }
+            }//else {
+                //rect.x = TILE_SIZE * j;
+                //rect.y = TILE_SIZE * i;
+                //SDL_RenderCopy(renderer, coin, NULL, &rect);
+            //}
         }
     }
     SDL_SetRenderTarget(renderer, NULL);
     return map_texture;
 }
 
-int get_spawn_x(int pac_or_demon){
-    if(pac_or_demon == 1){
-        for (int i = 0; i<109; i++){
-            for(int j = 0; j<145; j++){
-                if (maze[i][j] == 0){
-                    return j+1;
-                }
-            }
-        }
-    }else{
-        for (int i = 108; i>=0; i--){
-            for(int j = 144; j>=0; j--){
-                if (maze[i][j] == 0){
-                    return j+1;
-                }
+int get_spawn_x(int pac_or_demon) {
+    for(int i = 0; i<height; i++){
+        for(int j = 0; j<width; j++){
+            if(maze[i][j] == 0){
+                std::cout << j << std::endl;
+                return j*16;
             }
         }
     }
     return -1;
 }
 
-int get_spawn_y(int pac_or_demon){
-    if(pac_or_demon == 1){
-        for (int i = 0; i<109; i++){
-            for(int j = 0; j<145; j++){
-                if (maze[i][j] == 0){
-                    return i+1;
-                }
-            }
-        }
-    }else{
-        for (int i = 108; i>=0; i--){
-            for(int j = 144; j>=0; j--){
-                if (maze[i][j] == 0){
-                    return i+1;
-                }
+int get_spawn_y(int pac_or_demon) {
+    for(int i = 0; i<height; i++){
+        for(int j = 0; j<width; j++){
+            if(maze[i][j] == 0){
+                std::cout << i << std::endl;
+                return i*16;
             }
         }
     }
