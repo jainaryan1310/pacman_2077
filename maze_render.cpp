@@ -59,7 +59,7 @@ void dfs(int x, int y) {
 	return;
 }
 
-void generate_maze() {
+void generate_maze(int s) {
 	for (int i = 0; i < height; i += 2) {
 		for (int j = 0; j < width; j++) {
 			maze[i][j] = 1;
@@ -70,7 +70,7 @@ void generate_maze() {
 			maze[i][j] = 1;
 		}
 	}
-	srand(time(0));
+	srand(s);
 	int x = rand()%height;
 	int y = rand()%width;
 	while (maze[x][y] == 1) {
@@ -93,14 +93,6 @@ void generate_maze() {
 }
 
 int get_coins() {
-    /*int coins = 0;
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < height; j++) {
-            if (maze[i][j] == 0) {
-                coins += 1;
-            }
-        }
-    }*/
     return coins;
 }
 
@@ -130,6 +122,16 @@ int check_collisions(SDL_Rect *rect) {
     }
 }
 
+bool eat_coin(struct Player *player) {
+    struct SDL_Rect position = player->position;
+    if (maze[2*position.y/TILE_SIZE][2*position.x/TILE_SIZE] != 2) {
+        maze[2*position.y/TILE_SIZE][2*position.x/TILE_SIZE] = 2;
+        coins -= 1;
+        return true;
+    }
+    return false;
+}
+
 
 int move_and_check_collisions(SDL_Rect *position, int axis, int mov, bool pacman) {
     SDL_Rect temp = *position;
@@ -146,13 +148,6 @@ int move_and_check_collisions(SDL_Rect *position, int axis, int mov, bool pacman
         return 0;
     } else {
         *position = temp;
-        //cout << "pacman " << pacman << endl;
-        if (pacman) {
-            if (maze[2*position->y/TILE_SIZE][2*position->x/TILE_SIZE] != 2) {
-                maze[2*position->y/TILE_SIZE][2*position->x/TILE_SIZE] = 2;
-                coins -= 1;
-            }  
-        }
         return 1;
     }
 }
@@ -290,7 +285,7 @@ int get_spawn_x(int pac_or_demon) {
     for(int i = 0; i<height; i++){
         for(int j = 0; j<width; j++){
             if(maze[i][j] == 0){
-                std::cout << j << std::endl;
+                //std::cout << j << std::endl;
                 return j*16;
             }
         }
@@ -302,7 +297,7 @@ int get_spawn_y(int pac_or_demon) {
     for(int i = 0; i<height; i++){
         for(int j = 0; j<width; j++){
             if(maze[i][j] == 0){
-                std::cout << i << std::endl;
+                //std::cout << i << std::endl;
                 return i*16;
             }
         }

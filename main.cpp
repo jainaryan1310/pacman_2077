@@ -44,6 +44,7 @@ void init_players() {
         players[0].kills = 0;
         players[0].deaths = 0;
         players[0].pacman = true;
+        players[0].coins = 0;
     }
     for (i = 1; i < MAX_PLAYERS; i++) {
         players[i].position.x = get_spawn_x(0);
@@ -56,6 +57,7 @@ void init_players() {
         players[i].kills = 0;
         players[i].deaths = 0;
         players[i].pacman = false;
+        players[i].coins = 0;
     }
 }
 
@@ -102,7 +104,7 @@ void* client_loop(void *arg) {
     }
 }
 
-int main(){
+int main(int argc, char* argv[]){
     struct sockaddr_in server_addr, client_addr;
     int sock_server, sock_client;
     char *server_ip_addr = NULL;
@@ -140,7 +142,8 @@ int main(){
         SDL_Quit();
         return 1;
     }
-    generate_maze();
+    unsigned int n = stoi(argv[1]);
+    generate_maze(n);
     init_players();
     
     pacman = load_texture(renderer, "pacman.bmp");
@@ -178,11 +181,18 @@ int main(){
 
     while (1) {
         if (get_coins() <= 0) {
-            cout << "Pacman wins, demons lose" << endl;
+            int max = 0;
+            for (int i = 0; i < MAX_PLAYERS; i++) {
+                if (players[i].coins > max) {
+                    max = i;
+                }
+            }
+            cout << "Player " << i << " wins!" << endl;
             break;
         }
-        if (players[0].deaths >= 5) {
-            cout << "Pacman loses, demons win" << endl;
+        if (players[my_id].deaths >= 5) {
+            cout << "Player " << i << " loses!" << endl;
+            break;
         }
         if (SDL_PollEvent(&e)) {
             if (e.type == SDL_QUIT) {

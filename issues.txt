@@ -1,0 +1,5 @@
+1. Z input not taken on my laptop.
+2. Crashes on Aryan's laptop, runs for sometime on mine, but then stops on mine too.
+3. Maze different for all players, need to sync it for all. (Demon moves as per pacman's maze, but rendered in a different maze)
+4. Demon movement causes coins to disappear, in pacman window.
+5. Nothing disappears in the demon window.

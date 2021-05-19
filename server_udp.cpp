@@ -1,3 +1,4 @@
+#include <iostream>
 #include "server_udp.h"
 #include "network.h"
 #include "objects.h"
@@ -6,6 +7,8 @@
 #include "time.h"
 #include "sys/time.h"
 #include "maze_render.h"
+
+using namespace std;
 
 struct sockaddr_in clients_addresses[MAX_PLAYERS];
 struct Player players_server[MAX_PLAYERS];
@@ -71,7 +74,14 @@ void* server_receive_loop(void *arg) {
                 temp.face = players_server[client_pos].face;
                 if (temp.face == 1) {
                     temp.position.x += PLAYER_WIDTH;
-                } else {
+                } 
+                else if (temp.face == 0) {
+                    temp.position.y -= BULLET_WIDTH;
+                }
+                else if (temp.face == 2) {
+                    temp.position.y += PLAYER_WIDTH;
+                }
+                else {
                     temp.position.x -= BULLET_WIDTH;
                 }
                 temp.player_id = client_pos;
@@ -128,6 +138,10 @@ void* server_send_loop(void *arg) {
                 players_server[0].deaths++;
                 players_server[killer].kills++;
             }
+            if (eat_coin(&players_server[0])) {
+                players_server[0].coins++;
+                cout << "player 0 coins " << players_server[0].coins << endl;
+            }
         }
         for (i = 1; i < number_of_connected_clients; i++) {
             move_player(&players_server[i]);
@@ -136,6 +150,10 @@ void* server_send_loop(void *arg) {
                 players_server[i].position.y = get_spawn_y(0);
                 players_server[i].deaths++;
                 players_server[killer].kills++;
+            }
+            if (eat_coin(&players_server[i])) {
+                players_server[i].coins++;
+                cout << "player " << i << " coins " << players_server[0].coins << endl;
             }
         }
         int16_t *bullet_array = NULL;
