@@ -5,11 +5,11 @@
 
 using namespace std;
 
-int height = 45;
-int width = 61;
+int height = 31;
+int width = 45;
 int coins = 0;
 
-int maze[45][61];
+int maze[31][45];
 
 void dfs(int x, int y) {
 	maze[x][y] = 2;

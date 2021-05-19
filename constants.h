@@ -3,8 +3,8 @@
 
 #include "stdbool.h"
 
-#define SCREEN_WIDTH 1952
-#define SCREEN_HEIGHT 1440
+#define SCREEN_WIDTH 1440
+#define SCREEN_HEIGHT 992
 #define FRAME_TIME 16666
 #define TILE_SIZE 32
 #define PLAYER_SPEED 4

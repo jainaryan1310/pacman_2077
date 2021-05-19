@@ -122,8 +122,8 @@ int main(){
             "pacman_2077",
             SDL_WINDOWPOS_UNDEFINED,
             SDL_WINDOWPOS_UNDEFINED,
-            976,
             720,
+            496,
             0);
 
     if (window == NULL) {
