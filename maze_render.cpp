@@ -155,7 +155,19 @@ void move_bullets(struct node **bullets) {
     int i = 0;
     while (next != NULL) {
         b = (struct Bullet*) next->data;
-        b->position.x += PLAYER_SPEED * b->face * 1;
+        if (b->face == 0) {
+            b->position.y -= PLAYER_SPEED;
+        }
+        if (b->face == 1) {
+            b->position.x += PLAYER_SPEED;
+        }
+        if (b->face == 2) {
+            b->position.y += PLAYER_SPEED;
+        }
+        if (b->face == 3) {
+            b->position.x -= PLAYER_SPEED;
+        }
+        //b->position.x += PLAYER_SPEED * b->face * 1;
         next = next->next;
         if (check_collisions(&b->position)) {
             erase_element(bullets, i);
