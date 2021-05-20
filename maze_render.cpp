@@ -248,7 +248,7 @@ void print_maze_values(){
     }
 }
 
-SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
+SDL_Texture* get_map_texture_pacman(SDL_Renderer *renderer) {
     SDL_Surface *bmp = NULL;
     bmp = SDL_LoadBMP("coin.bmp");
     SDL_Surface *bitmap = NULL;
@@ -275,6 +275,42 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
                 rect.x = TILE_SIZE * j;
                 rect.y = TILE_SIZE * i;
                 SDL_RenderCopy(renderer, coin, NULL, &rect);
+            }else{
+                rect.x = TILE_SIZE * j;
+                rect.y = TILE_SIZE * i;
+                SDL_RenderFillRect(renderer, &rect);
+            }
+        }
+    }
+    SDL_DestroyTexture(tex);
+    SDL_DestroyTexture(coin);
+    SDL_SetRenderTarget(renderer, NULL);
+    return map_texture;
+}
+
+SDL_Texture* get_map_texture_demon(SDL_Renderer *renderer) {
+    SDL_Surface *bmp = NULL;
+    bmp = SDL_LoadBMP("coin.bmp");
+    SDL_Surface *bitmap = NULL;
+    SDL_Texture *map_texture;
+    SDL_Rect rect;
+    rect.w = TILE_SIZE;
+    rect.h = TILE_SIZE;
+    bitmap = SDL_LoadBMP("tile.bmp");
+    SDL_Texture *tex = NULL;
+    tex = SDL_CreateTextureFromSurface(renderer, bitmap);
+    SDL_Texture *coin = NULL;
+    coin = SDL_CreateTextureFromSurface(renderer, bmp);
+    map_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_SetRenderTarget(renderer, map_texture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    int i, j;
+    for (i = 0; i < SCREEN_HEIGHT / TILE_SIZE; i++) {
+        for (j = 0; j < SCREEN_WIDTH / TILE_SIZE; j++) {
+            if (maze[i][j] == 1) {
+                rect.x = TILE_SIZE * j;
+                rect.y = TILE_SIZE * i;
+                SDL_RenderCopy(renderer, tex, NULL, &rect);
             }else{
                 rect.x = TILE_SIZE * j;
                 rect.y = TILE_SIZE * i;

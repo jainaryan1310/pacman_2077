@@ -203,7 +203,11 @@ int main(int argc, char* argv[]){
         send_to_server(sock_client, server_addr, my_id, key_state_from_player(&players[my_id]));
         usleep(30);
         SDL_RenderClear(renderer);
-        map = get_map_texture(renderer);
+        if (menu == 's'){
+            map = get_map_texture_pacman(renderer);
+        }else{
+            map = get_map_texture_demon(renderer);
+        }
         SDL_RenderCopy(renderer, map, NULL, NULL);
         SDL_RenderCopy(renderer, pacman, NULL, &players[0].position);
         for (i = 1; i <= number_of_players; i++) {
