@@ -325,8 +325,8 @@ SDL_Texture* get_map_texture_demon(SDL_Renderer *renderer) {
 }
 
 int get_spawn_x(int pac_or_demon) {
-    for(int i = 0; i<height; i++){
-        for(int j = 0; j<width; j++){
+    for(int i = 1; i<height; i++){
+        for(int j = 1; j<width; j++){
             if(pac_or_demon == 1){
                 if(maze[i][j] == 0){
                     return j*16;
@@ -342,8 +342,8 @@ int get_spawn_x(int pac_or_demon) {
 }
 
 int get_spawn_y(int pac_or_demon) {
-    for(int i = 0; i<height; i++){
-        for(int j = 0; j<width; j++){
+    for(int i = 1; i<height; i++){
+        for(int j = 1; j<width; j++){
             if(pac_or_demon == 1){
                 if(maze[i][j] == 0){
                     return i*16;

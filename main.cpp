@@ -21,6 +21,7 @@ int number_of_players = 0;
 int16_t my_id = -1;
 int16_t bullets_client[256];
 int bullets_number = 0;
+int maze_seed = 0;
 
 SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
     SDL_Surface *bitmap = NULL;
@@ -94,6 +95,7 @@ void* client_loop(void *arg) {
             players[id].position.y = tab[2];
             players[id].kills = tab[3];
             players[id].deaths = tab[4];
+            maze_seed = tab[5];
         }
         if (id == -2) {
             bullets_in_array = (length - sizeof(int16_t)) / (sizeof(int16_t) * 2);
@@ -142,9 +144,6 @@ int main(int argc, char* argv[]){
         SDL_Quit();
         return 1;
     }
-    unsigned int n = stoi(argv[1]);
-    generate_maze(n);
-    init_players();
     
     pacman = load_texture(renderer, "pacman.bmp");
     demon = load_texture(renderer, "demon.bmp");
@@ -161,6 +160,7 @@ int main(int argc, char* argv[]){
     server_addr = server_sock_addr(server_ip_addr);
     client_addr = client_sock_addr();
     if(menu == 's') {
+        maze_seed = set_maze_seed();
         prepare_server(&sock_server, &server_addr);
         pthread_create(&thread_id_server, NULL, server_receive_loop, &sock_server);
         pthread_create(&thread_id_server_send, NULL, server_send_loop, &sock_server);
@@ -173,6 +173,13 @@ int main(int argc, char* argv[]){
         usleep(100);
     }
 
+    while(maze_seed == 0){
+        continue;
+    }
+
+    generate_maze(maze_seed);
+    init_players();
+
     SDL_Rect bullet_pos;
     bullet_pos.w = BULLET_HEIGHT;
     bullet_pos.h = BULLET_HEIGHT;
@@ -181,12 +188,6 @@ int main(int argc, char* argv[]){
 
     while (1) {
         if (get_coins() <= 0) {
-            /*int max = 0;
-            for (int i = 0; i < MAX_PLAYERS; i++) {
-                if (players[i].coins > max) {
-                    max = i;
-                }
-            }*/
             cout << "Pacman wins and demons lose!" << endl;
             break;
         }

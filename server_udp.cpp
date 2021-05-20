@@ -14,6 +14,12 @@ struct sockaddr_in clients_addresses[MAX_PLAYERS];
 struct Player players_server[MAX_PLAYERS];
 struct node *bullets_server = NULL;
 int number_of_connected_clients = 0;
+int seed = 0;
+
+int set_maze_seed(){
+    seed = time(0)%10000;
+    return seed;
+}
 
 void prepare_server(int *sock, struct sockaddr_in *server_sock) {
     memset(clients_addresses, 0, sizeof(struct sockaddr_in) * MAX_PLAYERS);
@@ -162,7 +168,8 @@ void* server_send_loop(void *arg) {
                 tab[2] = players_server[j].position.y;
                 tab[3] = players_server[j].kills;
                 tab[4] = players_server[j].deaths;
-                send_data(socket, clients_addresses[i], tab, 5);
+                tab[5] = seed;
+                send_data(socket, clients_addresses[i], tab, 6);
                 usleep(20);
             }
             send_data(socket, clients_addresses[i], bullet_array, 1 + (bullets_n * 2));
