@@ -151,10 +151,6 @@ void* server_send_loop(void *arg) {
                 players_server[i].deaths++;
                 players_server[killer].kills++;
             }
-            if (eat_coin(&players_server[i])) {
-                players_server[i].coins++;
-                cout << "player " << i << " coins " << players_server[0].coins << endl;
-            }
         }
         int16_t *bullet_array = NULL;
         int bullets_n = get_bullet_array(bullets_server, &bullet_array);

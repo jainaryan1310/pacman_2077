@@ -229,6 +229,7 @@ int main(int argc, char* argv[]){
             bullet_pos.y = bullets_client[i*2 + 1];
             SDL_RenderCopy(renderer, bullet, NULL, &bullet_pos);
         }
+        SDL_DestroyTexture(map);
         SDL_RenderPresent(renderer);
     }
 
@@ -240,7 +241,6 @@ int main(int argc, char* argv[]){
     SDL_DestroyTexture(pacman);
     SDL_DestroyTexture(demon);
     SDL_DestroyTexture(bullet);
-    SDL_DestroyTexture(map);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

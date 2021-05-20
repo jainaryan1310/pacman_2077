@@ -263,6 +263,7 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
     coin = SDL_CreateTextureFromSurface(renderer, bmp);
     map_texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_SetRenderTarget(renderer, map_texture);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     int i, j;
     for (i = 0; i < SCREEN_HEIGHT / TILE_SIZE; i++) {
         for (j = 0; j < SCREEN_WIDTH / TILE_SIZE; j++) {
@@ -274,9 +275,15 @@ SDL_Texture* get_map_texture(SDL_Renderer *renderer) {
                 rect.x = TILE_SIZE * j;
                 rect.y = TILE_SIZE * i;
                 SDL_RenderCopy(renderer, coin, NULL, &rect);
+            }else{
+                rect.x = TILE_SIZE * j;
+                rect.y = TILE_SIZE * i;
+                SDL_RenderFillRect(renderer, &rect);
             }
         }
     }
+    SDL_DestroyTexture(tex);
+    SDL_DestroyTexture(coin);
     SDL_SetRenderTarget(renderer, NULL);
     return map_texture;
 }

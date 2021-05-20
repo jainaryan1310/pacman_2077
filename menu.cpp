@@ -54,7 +54,7 @@ void ask_for_ip(SDL_Renderer *renderer, TTF_Font *font, char *ip) {
         }
         usleep(200);
         SDL_RenderClear(renderer);
-        disp_text(renderer, "ip addres", font, 240, 200);
+        disp_text(renderer, "ip address", font, 240, 200);
         disp_text(renderer, ip, font, 240, 230);
         SDL_RenderPresent(renderer);
     }
