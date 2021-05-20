@@ -33,19 +33,19 @@ SDL_Texture* load_texture(SDL_Renderer *renderer, char *file) {
 
 void init_players() {
     int i;
-    if(MAX_PLAYERS >= 1){
-        players[0].position.x = get_spawn_x(1);
-        players[0].position.y = get_spawn_y(1);
-        players[0].position.w = PLAYER_WIDTH;
-        players[0].position.h = PLAYER_HEIGHT;
-        players[0].face = 1;
-        players[0].shoot = false;
-        players[0].reloading = false;
-        players[0].kills = 0;
-        players[0].deaths = 0;
-        players[0].pacman = true;
-        players[0].coins = 0;
-    }
+    //if(MAX_PLAYERS >= 1){
+    players[0].position.x = get_spawn_x(1);
+    players[0].position.y = get_spawn_y(1);
+    players[0].position.w = PLAYER_WIDTH;
+    players[0].position.h = PLAYER_HEIGHT;
+    players[0].face = 1;
+    players[0].shoot = false;
+    players[0].reloading = false;
+    players[0].kills = 0;
+    players[0].deaths = 0;
+        //players[0].pacman = true;
+        //players[0].coins = 0;
+    //}
     for (i = 1; i < MAX_PLAYERS; i++) {
         players[i].position.x = get_spawn_x(0);
         players[i].position.y = get_spawn_y(0);
@@ -56,8 +56,8 @@ void init_players() {
         players[i].reloading = false;
         players[i].kills = 0;
         players[i].deaths = 0;
-        players[i].pacman = false;
-        players[i].coins = 0;
+        //players[i].pacman = false;
+        //players[i].coins = 0;
     }
 }
 
@@ -88,7 +88,7 @@ void* client_loop(void *arg) {
         }
         if (id >= 0) {
             check_if_its_new_player(id);
-            players[id].player_id = id;
+            //players[id].player_id = id;
             //cout << "player_id assigned: " << id << endl;
             players[id].position.x = tab[1];
             players[id].position.y = tab[2];
@@ -181,17 +181,17 @@ int main(int argc, char* argv[]){
 
     while (1) {
         if (get_coins() <= 0) {
-            int max = 0;
+            /*int max = 0;
             for (int i = 0; i < MAX_PLAYERS; i++) {
                 if (players[i].coins > max) {
                     max = i;
                 }
-            }
-            cout << "Player " << i << " wins!" << endl;
+            }*/
+            cout << "Pacman wins and demons lose!" << endl;
             break;
         }
-        if (players[my_id].deaths >= 5) {
-            cout << "Player " << i << " loses!" << endl;
+        if (players[0].deaths >= 5) {
+            cout << "Pacman loses and demons win!" << endl;
             break;
         }
         if (SDL_PollEvent(&e)) {

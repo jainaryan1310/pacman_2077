@@ -15,9 +15,9 @@ struct Player {
 	int left, right, up, down;
 	int kills, deaths;
 	int face, shoot, reloading;
-	int player_id;				//used for checking whether the player can be killed by a bullet
-	bool pacman;
-	int coins;
+	//int player_id;				//used for checking whether the player can be killed by a bullet
+	//bool pacman;
+	//int coins;
 };
 
 void player_key_up (int key, struct Player* player);

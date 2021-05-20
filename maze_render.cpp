@@ -133,7 +133,7 @@ bool eat_coin(struct Player *player) {
 }
 
 
-int move_and_check_collisions(SDL_Rect *position, int axis, int mov, bool pacman) {
+int move_and_check_collisions(SDL_Rect *position, int axis, int mov) {
     SDL_Rect temp = *position;
 
     if (axis == X_AXIS) {
@@ -225,13 +225,13 @@ void move_player(struct Player *player) {
     
 
     while (x_movement != 0 || y_movement != 0) {
-        if (x_movement != 0 && move_and_check_collisions(&player->position, X_AXIS, x_movement, &player->pacman)) {
+        if (x_movement != 0 && move_and_check_collisions(&player->position, X_AXIS, x_movement)) {
             decrement_abs(&x_movement);
         } else {
             x_movement = 0;
         }
 
-        if (y_movement != 0 && move_and_check_collisions(&player->position, Y_AXIS, y_movement, &player->pacman)) {
+        if (y_movement != 0 && move_and_check_collisions(&player->position, Y_AXIS, y_movement)) {
             decrement_abs(&y_movement);
         } else {
             y_movement = 0;

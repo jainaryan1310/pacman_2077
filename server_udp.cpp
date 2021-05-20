@@ -39,12 +39,12 @@ void send_data(int sock, struct sockaddr_in client, int16_t data[], int size) {
 
 void init_players_tab() {
     int i;
-    if (MAX_PLAYERS >= 1){
-        players_server[0].position.w = PLAYER_WIDTH;
-        players_server[0].position.h = PLAYER_HEIGHT;
-        players_server[0].position.x = get_spawn_x(1);
-        players_server[0].position.y = get_spawn_y(1);
-    }
+    //if (MAX_PLAYERS >= 1){
+    players_server[0].position.w = PLAYER_WIDTH;
+    players_server[0].position.h = PLAYER_HEIGHT;
+    players_server[0].position.x = get_spawn_x(1);
+    players_server[0].position.y = get_spawn_y(1);
+    //}
     for (i = 1; i < MAX_PLAYERS; i++) {
         players_server[i].position.w = PLAYER_WIDTH;
         players_server[i].position.h = PLAYER_HEIGHT;
@@ -138,10 +138,11 @@ void* server_send_loop(void *arg) {
                 players_server[0].deaths++;
                 players_server[killer].kills++;
             }
-            if (eat_coin(&players_server[0])) {
-                players_server[0].coins++;
-                cout << "player 0 coins " << players_server[0].coins << endl;
-            }
+            //if (eat_coin(&players_server[0])) {
+                //players_server[0].coins++;
+                //cout << "player 0 coins " << players_server[0].coins << endl;
+            //}
+            eat_coin(&players_server[0]);
         }
         for (i = 1; i < number_of_connected_clients; i++) {
             move_player(&players_server[i]);
